@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dashboard — SERL Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #07090d;
+    --surface: #0d1117;
+    --surface2: #111820;
+    --border: #1c2330;
+    --accent: #00e5ff;
+    --green: #00ff88;
+    --amber: #ffb800;
+    --red: #ff3d5a;
+    --purple: #a855f7;
+    --text: #cdd9e5;
+    --muted: #4a5568;
+    --mono: 'Space Mono', monospace;
+    --body: 'DM Sans', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    min-height: 100vh;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.025) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 40px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(13,17,23,0.9);
+    backdrop-filter: blur(8px);
+  }
+
+  .nav-brand { font-family: var(--mono); font-size: 12px; letter-spacing: 0.2em; color: var(--accent); }
+  .nav-brand span { color: var(--muted); }
+
+  .nav-user {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .user-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 6px 14px 6px 8px;
+  }
+
+  .avatar {
+    width: 28px; height: 28px;
+    background: var(--accent);
+    color: #000;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .user-name { font-family: var(--mono); font-size: 12px; color: var(--text); letter-spacing: 0.05em; }
+
+  .btn-logout {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 7px 14px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .btn-logout:hover { border-color: var(--red); color: var(--red); }
+
+  /* ── MAIN ── */
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 48px 40px;
+  }
+
+  /* ── WELCOME HERO ── */
+  .hero {
+    margin-bottom: 40px;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--green);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .hero-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: blink 1.4s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  .hero h1 {
+    font-family: var(--mono);
+    font-size: 36px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin-bottom: 10px;
+  }
+
+  .hero h1 span { color: var(--accent); }
+
+  .hero-sub {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.6;
+    max-width: 540px;
+  }
+
+  /* ── STATS ROW ── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+    animation: fadeUp 0.5s ease 0.1s both;
+  }
+
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: var(--stat-color, var(--accent));
+  }
+
+  .stat-label { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 10px; }
+  .stat-val { font-family: var(--mono); font-size: 26px; font-weight: 700; color: var(--stat-color, var(--text)); }
+  .stat-sub { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-top: 4px; }
+
+  /* ── CONTENT GRID ── */
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    animation: fadeUp 0.5s ease 0.2s both;
+  }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 24px;
+  }
+
+  .panel-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ── SECURITY STATUS ── */
+  .security-items { display: flex; flex-direction: column; gap: 12px; }
+
+  .sec-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+  }
+
+  .sec-name { font-family: var(--mono); font-size: 12px; color: var(--text); }
+
+  .sec-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 3px 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .sec-badge.ok  { background: rgba(0,255,136,0.1); color: var(--green); border: 1px solid rgba(0,255,136,0.25); }
+  .sec-badge.on  { background: rgba(0,229,255,0.1); color: var(--accent); border: 1px solid rgba(0,229,255,0.25); }
+  .sec-badge.off { background: rgba(74,85,104,0.2); color: var(--muted);  border: 1px solid var(--border); }
+
+  /* ── ACTIVITY LOG ── */
+  .log-items { display: flex; flex-direction: column; gap: 8px; }
+
+  .log-item {
+    display: flex;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .log-item:last-child { border-bottom: none; }
+
+  .log-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+
+  .log-text { font-size: 13px; color: var(--text); line-height: 1.4; }
+  .log-time { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+  /* ── FULL WIDTH PANEL ── */
+  .full-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 24px;
+    margin-top: 20px;
+    animation: fadeUp 0.5s ease 0.3s both;
+  }
+
+  .protect-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 4px;
+  }
+
+  .protect-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 18px;
+    border-top: 2px solid var(--card-color, var(--accent));
+  }
+
+  .protect-icon { font-size: 20px; margin-bottom: 10px; }
+  .protect-name { font-family: var(--mono); font-size: 12px; color: var(--text); margin-bottom: 6px; font-weight: 700; }
+  .protect-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">SERL <span>//</span> Demo App</div>
+  <div class="nav-user">
+    <div class="user-pill">
+      <div class="avatar">{{ username[0].upper() }}</div>
+      <div class="user-name">{{ username }}</div>
+    </div>
+    <a href="/logout" class="btn-logout">Logout</a>
+  </div>
+</nav>
+
+<main>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-tag"><div class="hero-dot"></div> Authentication successful</div>
+    <h1>Hello, <span>{{ username }}</span>.</h1>
+    <p class="hero-sub">You're securely logged in. This session is protected by the SERL self-evolving rate limiter — your login was verified and allowed through.</p>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat" style="--stat-color: var(--green)">
+      <div class="stat-label">Status</div>
+      <div class="stat-val">Active</div>
+      <div class="stat-sub">session live</div>
+    </div>
+    <div class="stat" style="--stat-color: var(--accent)">
+      <div class="stat-label">Login time</div>
+      <div class="stat-val" id="login-time">--:--</div>
+      <div class="stat-sub">UTC</div>
+    </div>
+    <div class="stat" style="--stat-color: var(--amber)">
+      <div class="stat-label">Protection</div>
+      <div class="stat-val">SERL</div>
+      <div class="stat-sub">rate limiter on</div>
+    </div>
+    <div class="stat" style="--stat-color: var(--purple)">
+      <div class="stat-label">Auth method</div>
+      <div class="stat-val">Flask</div>
+      <div class="stat-sub">session-based</div>
+    </div>
+  </div>
+
+  <!-- CONTENT GRID -->
+  <div class="content-grid">
+
+    <!-- Security status -->
+    <div class="panel">
+      <div class="panel-title">Security status</div>
+      <div class="security-items">
+        <div class="sec-item">
+          <span class="sec-name">Rate limiter</span>
+          <span class="sec-badge on">Active</span>
+        </div>
+        <div class="sec-item">
+          <span class="sec-name">Brute force protection</span>
+          <span class="sec-badge ok">Enabled</span>
+        </div>
+        <div class="sec-item">
+          <span class="sec-name">ML anomaly detection</span>
+          <span class="sec-badge on">Running</span>
+        </div>
+        <div class="sec-item">
+          <span class="sec-name">Q-learning agent</span>
+          <span class="sec-badge on">Learning</span>
+        </div>
+        <div class="sec-item">
+          <span class="sec-name">Session</span>
+          <span class="sec-badge ok">Valid</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Activity log -->
+    <div class="panel">
+      <div class="panel-title">Recent activity</div>
+      <div class="log-items">
+        <div class="log-item">
+          <div class="log-dot" style="background:var(--green)"></div>
+          <div>
+            <div class="log-text">Login successful from this session</div>
+            <div class="log-time" id="log-time-1">just now</div>
+          </div>
+        </div>
+        <div class="log-item">
+          <div class="log-dot" style="background:var(--accent)"></div>
+          <div>
+            <div class="log-text">SERL rate limiter verified your request</div>
+            <div class="log-time">milliseconds ago</div>
+          </div>
+        </div>
+        <div class="log-item">
+          <div class="log-dot" style="background:var(--accent)"></div>
+          <div>
+            <div class="log-text">ML engine evaluated traffic pattern</div>
+            <div class="log-time">on login</div>
+          </div>
+        </div>
+        <div class="log-item">
+          <div class="log-dot" style="background:var(--amber)"></div>
+          <div>
+            <div class="log-text">Session token issued &amp; stored</div>
+            <div class="log-time">this session</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- PROTECTION FEATURES -->
+  <div class="full-panel">
+    <div class="panel-title">What protected this login</div>
+    <div class="protect-grid">
+      <div class="protect-card" style="--card-color: var(--accent)">
+        <div class="protect-icon">&#x1F6E1;</div>
+        <div class="protect-name">Token bucket algorithm</div>
+        <div class="protect-desc">Controls request rate per IP using a refilling token system. Allows short bursts, blocks sustained floods.</div>
+      </div>
+      <div class="protect-card" style="--card-color: var(--purple)">
+        <div class="protect-icon">&#x1F9E0;</div>
+        <div class="protect-name">Z-score anomaly detection</div>
+        <div class="protect-desc">Flags IPs whose request rate deviates more than 2σ from the rolling baseline — catches attacks automatically.</div>
+      </div>
+      <div class="protect-card" style="--card-color: var(--green)">
+        <div class="protect-icon">&#x1F4C8;</div>
+        <div class="protect-name">Q-learning RL agent</div>
+        <div class="protect-desc">Learns optimal rate limits over time. Tightens during attacks, relaxes during normal traffic — no manual tuning.</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  const raw = "{{ login_time }}";
+  if (raw) {
+    const d = new Date(raw + 'Z');
+    document.getElementById('login-time').textContent =
+      d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+    document.getElementById('log-time-1').textContent =
+      d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }) + ' UTC';
+  }
+</script>
+</body>
+</html>

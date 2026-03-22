@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sign Up — SERL Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #07090d;
+    --surface: #0d1117;
+    --border: #1c2330;
+    --accent: #00e5ff;
+    --green: #00ff88;
+    --red: #ff3d5a;
+    --text: #cdd9e5;
+    --muted: #4a5568;
+    --mono: 'Space Mono', monospace;
+    --body: 'DM Sans', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    top: -200px; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 600px;
+    background: radial-gradient(ellipse, rgba(0,229,255,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    width: 100%;
+    max-width: 420px;
+    padding: 48px 40px;
+    position: relative;
+    animation: slideUp 0.5s ease both;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--green), transparent);
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .brand { font-family: var(--mono); font-size: 11px; letter-spacing: 0.25em; color: var(--green); text-transform: uppercase; margin-bottom: 8px; }
+  h1 { font-family: var(--mono); font-size: 26px; font-weight: 700; color: #fff; margin-bottom: 6px; letter-spacing: -0.02em; }
+  .subtitle { font-size: 14px; color: var(--muted); margin-bottom: 36px; line-height: 1.5; }
+  .field { margin-bottom: 18px; }
+
+  label { display: block; font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; }
+
+  input[type="text"], input[type="password"] {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 14px;
+    padding: 12px 16px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  input:focus { border-color: var(--green); }
+  input::placeholder { color: var(--muted); }
+
+  .btn-primary {
+    width: 100%;
+    background: var(--green);
+    color: #000;
+    border: none;
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 14px;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: opacity 0.2s;
+  }
+  .btn-primary:hover { opacity: 0.88; }
+
+  .divider { text-align: center; font-family: var(--mono); font-size: 11px; color: var(--muted); margin: 24px 0; position: relative; }
+  .divider::before, .divider::after { content: ''; position: absolute; top: 50%; width: 38%; height: 1px; background: var(--border); }
+  .divider::before { left: 0; } .divider::after { right: 0; }
+
+  .link-row { text-align: center; font-size: 14px; color: var(--muted); }
+  .link-row a { color: var(--accent); text-decoration: none; font-family: var(--mono); font-size: 12px; letter-spacing: 0.05em; }
+  .link-row a:hover { text-decoration: underline; }
+
+  .error-msg { background: rgba(255,61,90,0.06); border-left: 3px solid var(--red); padding: 10px 14px; font-family: var(--mono); font-size: 12px; color: var(--red); margin-bottom: 20px; }
+
+  .blocked-box { background: rgba(255,61,90,0.08); border: 1px solid rgba(255,61,90,0.3); padding: 20px; margin-bottom: 28px; text-align: center; }
+  .blocked-title { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--red); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+  .blocked-sub { font-size: 13px; color: rgba(255,61,90,0.7); line-height: 1.5; }
+
+  .rl-badge { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 10px; color: var(--green); letter-spacing: 0.1em; margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--border); width: 100%; }
+  .rl-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: blink 1.4s ease-in-out infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  .hint { font-size: 11px; color: var(--muted); margin-top: 5px; font-family: var(--mono); }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="brand">SERL // Demo App</div>
+  <h1>Create account</h1>
+  <p class="subtitle">Sign up to get started. This form is protected against automated abuse.</p>
+
+  {% if blocked %}
+  <div class="blocked-box">
+    <div class="blocked-title">&#x26D4; Signup Blocked</div>
+    <div class="blocked-sub">Too many signup attempts from your IP.<br>Rate limiter has intervened. Please wait.</div>
+  </div>
+  {% endif %}
+
+  {% if error %}
+  <div class="error-msg">&#x2717; {{ error }}</div>
+  {% endif %}
+
+  <form method="POST" action="/signup">
+    <div class="field">
+      <label>Username</label>
+      <input type="text" name="username" placeholder="choose a username" autocomplete="off" required {% if blocked %}disabled{% endif %}/>
+      <div class="hint">min. 3 characters</div>
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" name="password" placeholder="choose a password" required {% if blocked %}disabled{% endif %}/>
+      <div class="hint">min. 6 characters</div>
+    </div>
+    <div class="field">
+      <label>Confirm password</label>
+      <input type="password" name="confirm" placeholder="repeat your password" required {% if blocked %}disabled{% endif %}/>
+    </div>
+    <button type="submit" class="btn-primary" {% if blocked %}disabled style="opacity:0.4;cursor:not-allowed"{% endif %}>
+      {% if blocked %}Blocked by rate limiter{% else %}Create account →{% endif %}
+    </button>
+  </form>
+
+  <div class="divider">or</div>
+  <div class="link-row">Already have an account? <a href="/login">Sign in →</a></div>
+
+  <div class="rl-badge">
+    <div class="rl-dot"></div>
+    SERL rate limiter active — signup abuse protection enabled
+  </div>
+</div>
+</body>
+</html>
